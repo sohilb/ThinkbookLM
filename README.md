@@ -1,1 +1,1 @@
-# Thinkbook LM (A notebookLM clone)
+# ThinkbookLM (A notebookLM clone)
