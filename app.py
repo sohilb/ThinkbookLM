@@ -32,8 +32,9 @@ def add_sources_dialog():
 
 # Top utility bar
 with st.container(horizontal=True):
-    st.markdown("### 🤖 ThinkbookLM")
+    st.text_input("Notebook title", value="Untitled notebook", max_chars=30, key="notebook_title", label_visibility="collapsed", icon=":material/edit:")
     st.space("stretch")
+    st.button("Create notebook", key="create_notebook_btn", help="Create notebook", icon=":material/add:", type="secondary" )
     st.button("👤", key="profile_btn", help="Profile")
 
 
@@ -55,16 +56,33 @@ with col1:
     
 with col2:
     st.subheader("Chat", text_alignment="left", divider="gray")
-    with st.container(height=400, border=False):
+    with st.container(border=False, height="stretch"):
         st.info("Chat interface coming soon!", icon=":material/add:")
-    st.write(st.session_state.get("sources_selected", 0), "sources selected")
+    st.text(f"{st.session_state.get('sources_selected', 0)} sources selected", text_alignment="right", width="stretch")
     if prompt := st.chat_input("Type your message here...", key="chat_input"):
         st.session_state.last_message = prompt
         st.rerun()
 with col3:
-    @st.fragment(run_every="1s")
-    def studio_panel():
-        st.subheader("Studio", text_alignment="left", divider="gray")
-        st.write(dict(st.session_state))
+    st.subheader("Studio", text_alignment="left", divider="gray")
+    feat_col_1, feat_col_2 = st.columns(2)
+    with feat_col_1:
+        st.button("Audio Overview", key="audio_overview_btn", width="stretch", icon=":material/audiotrack:")
+        st.button("Video Overview", key="video_overview_btn", width="stretch", icon=":material/videocam:")
+        st.button("Reports", key="reports_btn", width="stretch", icon=":material/bar_chart:")
+        st.button("Quiz", key="quiz_btn", width="stretch", icon=":material/quiz:")
+        st.button("Data Table", key="data_table_btn", width="stretch", icon=":material/table_view:")
+    with feat_col_2:
+        st.button("Slide Deck", key="slide_deck_btn", width="stretch", icon=":material/slideshow:")
+        st.button("Mind map", key="mind_map_btn", width="stretch", icon=":material/insert_chart:")
+        st.button("Flashcards", key="flashcards_btn", width="stretch", icon=":material/flash_on:")
+        st.button("Infographics", key="infographics_btn", width="stretch", icon=":material/image:")
+    
+    
 
-    studio_panel()
+
+
+@st.fragment(run_every="1s")
+def studio_panel():
+    st.write(dict(st.session_state))
+
+studio_panel()
