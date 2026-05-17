@@ -28,7 +28,7 @@ if 'display_mode' not in st.session_state:
     st.session_state.display_mode = 'grid'
 
 # Top utility bar
-with st.container(horizontal=True, vertical_alignment="center"):
+with st.container(horizontal=True, vertical_alignment="center", border=True):
     st.image(image="frontend/assets/logo.jpg", width=50)
     st.subheader("ThinkbookLM")
     st.space("stretch")
