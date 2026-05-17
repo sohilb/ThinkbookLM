@@ -13,7 +13,7 @@ st.set_page_config(
 )
 
 if "page" not in st.session_state:
-    st.session_state.page = "home"
+    st.session_state.page = "notebook"
 if "sources" not in st.session_state:
     st.session_state.sources = []
 if "sources_selected" not in st.session_state:
@@ -67,15 +67,15 @@ with col3:
     feat_col_1, feat_col_2 = st.columns(2)
     with feat_col_1:
         st.button("Audio Overview", key="audio_overview_btn", width="stretch", icon=":material/audiotrack:")
-        st.button("Video Overview", key="video_overview_btn", width="stretch", icon=":material/videocam:")
+        st.button("Slide Deck", key="slide_deck_btn", width="stretch", icon=":material/slideshow:")
         st.button("Reports", key="reports_btn", width="stretch", icon=":material/bar_chart:")
         st.button("Quiz", key="quiz_btn", width="stretch", icon=":material/quiz:")
         st.button("Data Table", key="data_table_btn", width="stretch", icon=":material/table_view:")
     with feat_col_2:
-        st.button("Slide Deck", key="slide_deck_btn", width="stretch", icon=":material/slideshow:")
+        st.button("Video Overview", key="video_overview_btn", width="stretch", icon=":material/videocam:")
         st.button("Mind map", key="mind_map_btn", width="stretch", icon=":material/insert_chart:")
         st.button("Flashcards", key="flashcards_btn", width="stretch", icon=":material/flash_on:")
-        st.button("Infographics", key="infographics_btn", width="stretch", icon=":material/image:")
+        st.button("Infographic", key="infographic_btn", width="stretch", icon=":material/image:")
     
     
 

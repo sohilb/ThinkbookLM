@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-ThinkbookLM is a NotebookLM clone built with Streamlit. The UI is a three-panel layout (Sources | Chat | Studio) modelled after Google's NotebookLM.
+ThinkbookLM is a full-stack NotebookLM clone. The frontend is Streamlit; the backend (in progress) will be FastAPI. The UI has a three-panel layout (Sources | Chat | Studio).
 
 ## Commands
 
@@ -14,30 +14,50 @@ This project uses `uv` for dependency management.
 # Install dependencies
 uv sync
 
-# Run the app
-uv run streamlit run app.py
+# Run the frontend (landing page entry point)
+uv run streamlit run frontend/app.py
 
-# Run with auto-reload (default in dev)
-uv run streamlit run app.py --server.runOnSave true
+# Run with auto-reload
+uv run streamlit run frontend/app.py --server.runOnSave true
+
+# Run the backend (once implemented)
+uv run uvicorn backend.main:app --reload
 
 # Add a dependency
 uv add <package>
 ```
 
-## Architecture
+## Structure
 
-All application code lives in `app.py` (single-file Streamlit app). `main.py` is a placeholder entry point not used by the UI.
+```
+frontend/
+  app.py              # Landing page (Streamlit entry point)
+  pages/
+    notebook.py       # Notebook UI — Sources | Chat | Studio
+  components/         # Reusable Streamlit widgets
 
-**Layout** — three bordered columns rendered after a top utility bar:
-- `col1` (25%) — Sources panel: file upload via `@st.dialog`, uploaded filenames stored in `st.session_state.sources`
-- `col2` (50%) — Chat panel
-- `col3` (25%) — Studio panel
+backend/
+  main.py             # FastAPI app
+  api/routes/         # sources.py, chat.py, studio.py
+  services/
+    ingestion/        # parser → chunker → embedder pipeline
+    retrieval/        # vector_store.py — query interface
+    generation/       # chat.py, audio.py, structured.py, document.py
+    llm/              # client.py — shared Claude API client
+  models/             # Pydantic schemas: notebook, source, generation
 
-**State** — managed entirely through `st.session_state`. Key keys:
-- `page` — current page/view
-- `sources` — list of uploaded source filenames
+shared/               # Types shared between frontend and backend
+```
 
-**UI conventions:**
+## Frontend conventions
+
 - Use only native Streamlit APIs — no `unsafe_allow_html`, no injected CSS/JS
-- Dialogs (`@st.dialog`) are preferred over inline conditional widget rendering to keep the main page uncluttered
-- `st.rerun()` is called after mutating session state inside dialogs to reflect changes immediately
+- `@st.dialog` for modal workflows (e.g. Add Sources) to keep page uncluttered
+- `st.rerun()` after mutating session state inside dialogs
+- `@st.fragment(run_every=...)` for panels that need to reflect state changes independently
+
+## Key session state keys (notebook page)
+
+- `sources` — list of uploaded source filenames
+- `sources_selected` — count of checked sources (derived via `sum()` after checkbox render)
+- `last_message` — most recent chat input
